@@ -27,7 +27,7 @@
 
 #define STATUS_LED 5
 
-volatile long i=0;
+volatile unsigned long i=0;
 
 ///============Initialize Prototypes=====================///////////////////////
 void ioinit(void);      // initializes IO
@@ -46,7 +46,7 @@ ISR (INT0_vect)
 ISR(TIMER1_OVF_vect)
 {
 	TCNT1 = TCNT1_1SEC;
-	printf("counts per second: %ld  \r", i);
+	printf("counts per second: %lu  \r", i);
 	i=0;
 }
 
