@@ -15,6 +15,9 @@
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
 
+//load timer with a value to optimize for 1 second, (256/8MHz)*(65536bits-34286)~=1.0s
+#define TCNT1_1SEC (34286)
+
 #define FOSC 8000000
 #define BAUD 9600
 #define MYUBRR 51 
@@ -42,7 +45,7 @@ ISR (INT0_vect)
 
 ISR(TIMER1_OVF_vect)
 {
-	TCNT1 = 34000;	//(256/8MHz)*(65536bits-34000)~=1.009s
+	TCNT1 = TCNT1_1SEC;
 	printf("counts per second: %ld  \r", i);
 	i=0;
 }
@@ -91,8 +94,8 @@ void ioinit (void)
     TCCR1B |= (1<<CS12);
     //enable overflow interrupt
     TIMSK1 |= (1<<TOIE1);
-    //load timer with a value to optimize for 1 second, (256/8MHz)*(65536bits-34000)~=1.009s
-    TCNT1 = 34000;
+    //load timer with a value to optimize for 1 second
+    TCNT1 = TCNT1_1SEC;
 	
     sei(); //turn on global interrupts
 }
