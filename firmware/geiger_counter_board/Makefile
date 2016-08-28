@@ -191,18 +191,30 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 
 
 #---------------- Programming Options (avrdude) ----------------
+TRY_ARDUINO_PRO_MINI ?= YES
+RUN_ON_UNIX ?= YES
+
+ifeq ($(RUN_ON_UNIX),YES)
+AVRDUDE_CONF = -C /Applications/Arduino.app/Contents/Java//hardware/tools/avr/etc/avrdude.conf
+endif
 
 # Programming hardware: alf avr910 avrisp bascom bsd 
 # dt006 pavr picoweb pony-stk200 sp12 stk200 stk500
 #
 # Type: avrdude -c ?
 # to get a full listing.
+ifeq ($(TRY_ARDUINO_PRO_MINI),YES)
+AVRDUDE_BAUD = -b 57600
+AVRDUDE_PROGRAMMER = arduino
+#AVRDUDE_PROGRAMMER = avrisp
+else
 AVRDUDE_PROGRAMMER = stk500v2
 #AVRDUDE_PROGRAMMER = ponyser
+endif
 
 # com1 = serial port. Use lpt1 to connect to parallel port.
 #AVRDUDE_PORT = lpt1
-AVRDUDE_PORT = COM3
+AVRDUDE_PORT = /dev/tty.usbserial-*
 
 AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
 #AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep
@@ -382,7 +394,7 @@ gccversion :
 
 # Program the device.  
 program: $(TARGET).hex $(TARGET).eep
-	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
+	$(AVRDUDE) $(AVRDUDE_BAUD) $(AVRDUDE_CONF) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
 
 program_stk500: $(TARGET).hex $(TARGET).eep
 	$(STK500_PATH)\$(STK500) $(STK500_FLAGS) $(STK500_WRITE_FLASH)
