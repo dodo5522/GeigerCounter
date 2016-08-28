@@ -27,7 +27,9 @@
 
 #define STATUS_LED 5
 
-volatile unsigned long i=0;
+volatile unsigned long sec = 0;
+volatile unsigned long cps = 0;
+volatile unsigned long cpm = 0;
 
 ///============Initialize Prototypes=====================///////////////////////
 void ioinit(void);      // initializes IO
@@ -38,16 +40,22 @@ void delay_ms(uint16_t x); // general purpose delay
 /////===================================================////////////////////////
 
 ISR (INT0_vect) 
-{		
-	i++;
+{
+	++cps;
 	cbi(PORTC, STATUS_LED);
 }
 
 ISR(TIMER1_OVF_vect)
 {
-	TCNT1 = TCNT1_1SEC;
-	printf("counts per second: %lu  \r", i);
-	i=0;
+    TCNT1 = TCNT1_1SEC;
+    //printf("%lu \r", sec);
+
+    if (sec < 60) {
+        cpm += cps;
+        ++sec;
+    }
+
+    cps = 0;
 }
 
 //=========MAIN================/////////////////////////////////////////////////
@@ -61,9 +69,16 @@ int main(void)
 	{	
 		sbi(PORTC, STATUS_LED);
 		delay_ms(30);
+
+        if (sec >= 60) {
+            //printf("cpm:%lu          \r", cpm);
+            printf("cpm:%lu          \n", cpm);
+            cpm = 0;
+            sec = 0;
+        }
 	}
 	
-	cli();
+	cli(); // Disables all interrupts by clearing the global interrupt mask.
 }
 
 ////////////////////////////////////////////////////////////////////////////////
