@@ -4,7 +4,7 @@ Geiger Counter
 *Geiger Counter (SEN-11345)*](https://www.sparkfun.com/products/11345)
 
 This USB powered Geiger Counter is equipped with an ATMega328 that can be programmed in-circuit. Out of the box, the board works
-at 9600 bps over any serial terminal and generates random bits in reaction to background radiation.
+at 19200 bps over any serial terminal and generates random bits in reaction to background radiation.
 
 Repository Contents
 -------------------
