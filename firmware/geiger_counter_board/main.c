@@ -47,15 +47,14 @@ ISR (INT0_vect)
 
 ISR(TIMER1_OVF_vect)
 {
-    TCNT1 = TCNT1_1SEC;
-    //printf("%lu \r", sec);
+	TCNT1 = TCNT1_1SEC;
 
-    if (sec < 60) {
-        cpm += cps;
-        ++sec;
-    }
+	if (sec < 60) {
+		cpm += cps;
+		++sec;
+	}
 
-    cps = 0;
+	cps = 0;
 }
 
 //=========MAIN================/////////////////////////////////////////////////
@@ -70,12 +69,11 @@ int main(void)
 		sbi(PORTC, STATUS_LED);
 		delay_ms(30);
 
-        if (sec >= 60) {
-            //printf("cpm:%lu          \r", cpm);
-            printf("cpm:%lu          \n", cpm);
-            cpm = 0;
-            sec = 0;
-        }
+		if (sec >= 60) {
+			printf("%lu cpm\r\n", cpm);
+			cpm = 0;
+			sec = 0;
+		}
 	}
 	
 	cli(); // Disables all interrupts by clearing the global interrupt mask.
