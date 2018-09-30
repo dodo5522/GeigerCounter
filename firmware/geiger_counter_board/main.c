@@ -70,7 +70,7 @@ int main(void)
 		delay_ms(30);
 
 		if (sec >= 60) {
-			printf("%lu cpm\r\n", cpm);
+			printf("{ \"cpm\": %lu, \"sec\": %lu }\r\n", cpm, sec);
 			cpm = 0;
 			sec = 0;
 		}
